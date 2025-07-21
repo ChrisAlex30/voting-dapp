@@ -71,10 +71,43 @@ describe("Voting Dapp",()=>{
       votingAdress
     );
 
-    const smoothCandidate=await votingProgram.account.candidate.fetch(crunchyResponse);
+    const smoothCandidate=await votingProgram.account.candidate.fetch(smoothResponse);
     console.log(smoothCandidate);
     expect(smoothCandidate.candidateVotes.toNumber()).toEqual(0);
+
+
+    const [pollAddress]=PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer,"le",8)],
+      votingAdress
+    );
+
+    const poll=await votingProgram.account.poll.fetch(pollAddress);
+    console.log(poll);
     
 
+  })
+
+  it("Vote",async()=>{
+    await votingProgram.methods.vote(
+      "Smooth",
+      new anchor.BN(1)
+    ).rpc();
+
+    const [smoothResponse]=PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer,"le",8),Buffer.from("Smooth")],
+      votingAdress
+    );
+
+    const smoothCandidate=await votingProgram.account.candidate.fetch(smoothResponse);
+    console.log(smoothCandidate);
+    expect(smoothCandidate.candidateVotes.toNumber()).toEqual(1);
+
+    const [pollAddress]=PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer,"le",8)],
+      votingAdress
+    );
+
+    const poll=await votingProgram.account.poll.fetch(pollAddress);
+    console.log(poll);
   })
 })
