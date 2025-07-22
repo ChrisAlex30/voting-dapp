@@ -7,19 +7,25 @@ import IDL from "../target/idl/votingdapp.json" assert { type: "json" };
 
 
 
-const votingAdress=new PublicKey("JAVuBXeBZqXNtS73azhBDAoYaaAFfo4gWXoZe2e7Jf8H");
+const votingAdress=new PublicKey("5Sz5P5uKKMn2eujZtoPRA3jC3guSLazxkgQsXB7xve6c");
 //jest.setTimeout(30000); // 30 seconds
 
 describe("Voting Dapp",()=>{
 
-  let context;
-  let provider;
-  let votingProgram;
+  // let context;
+  // let provider;
 
+  // anchor.setProvider(anchor.AnchorProvider.env());
+  // let votingProgram=anchor.workspace.votingdapp as Program<Votingdapp>;
+  let votingProgram;
   beforeAll(async()=>{
-    context=await startAnchor("",[{name:"votingdapp",programId:votingAdress}],[]);
-    provider=new BankrunProvider(context);
-    votingProgram=new Program<Votingdapp>(IDL as unknown as Votingdapp,provider);
+    // context=await startAnchor("",[{name:"votingdapp",programId:votingAdress}],[]);
+    // provider=new BankrunProvider(context);
+    // votingProgram=new Program<Votingdapp>(IDL as unknown as Votingdapp,provider);
+    const provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+
+    votingProgram = new Program(IDL as anchor.Idl, provider);
   })
 
   it("Initialize Poll",async()=>{
